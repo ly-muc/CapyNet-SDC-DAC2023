@@ -5,6 +5,7 @@ from .coco import CocoDataset
 from .coco_occluded import OccludedSeparatedCocoDataset
 from .coco_panoptic import CocoPanopticDataset
 from .custom import CustomDataset
+from .dac import DACDataset
 from .dataset_wrappers import (ClassBalancedDataset, ConcatDataset,
                                MultiImageMixDataset, RepeatDataset)
 from .deepfashion import DeepFashionDataset
@@ -27,5 +28,5 @@ __all__ = [
     'build_dataset', 'replace_ImageToTensor', 'get_loading_pipeline',
     'NumClassCheckHook', 'CocoPanopticDataset', 'MultiImageMixDataset',
     'OpenImagesDataset', 'OpenImagesChallengeDataset', 'Objects365V1Dataset',
-    'Objects365V2Dataset', 'OccludedSeparatedCocoDataset'
+    'Objects365V2Dataset', 'OccludedSeparatedCocoDataset', 'DACDataset'
 ]
