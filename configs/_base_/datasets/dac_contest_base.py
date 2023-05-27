@@ -22,6 +22,7 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(1333, 800),
@@ -32,7 +33,7 @@ test_pipeline = [
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
-            dict(type='Collect', keys=['img']),
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
         ])
 ]
 
@@ -58,3 +59,7 @@ data = dict(
         img_prefix=data_root + 'JPEGImages',
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
+
+val_dataloader = dict(
+    persistent_workers=True,
+    drop_last=False)
