@@ -71,7 +71,7 @@ class DACDataset(CustomDataset):
     
             # load annotations    
             labels, bboxes = get_meta(int(image_id), cat2label.get)
-            bboxes = np.array(bboxes, float)
+            bboxes = np.array(bboxes, np.float32)
             labels = np.array(labels, np.long)
 
             data_anno = dict(
