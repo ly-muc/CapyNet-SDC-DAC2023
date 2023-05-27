@@ -6,6 +6,8 @@ _base_ = [
 
 
 load_from = '/home/linyan/code/gpu_starter_2023/checkpoints/epoch_12.pth'
-
+gpu_ids = range(1)
+seed = 0
+device = 'cuda'
 # Set up working dir to save files and logs.
 work_dir = './tutorial_exps'
