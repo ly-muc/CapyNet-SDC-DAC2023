@@ -12,8 +12,8 @@ model = dict(
         start_level=0,
         num_outs=3),
     bbox_head=dict(
-        type='MMENanoDetHead',
-        num_classes=80,
+        type='NanoDetHead',
+        num_classes=7,
         in_channels=96,
         stacked_convs=2,
         feat_channels=96,
@@ -42,19 +42,19 @@ model = dict(
 
 ### Dataset ###
 
-dataset_type = 'CocoDataset'
-data_root = 'data/coco/'
+# Modify dataset type and path
+dataset_type = 'DACDataset'
+data_root = '/home/linyan/data/dac/train/'
+
+val_dataloader = dict(
+    persistent_workers=True,
+    drop_last=False)
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
-        to_float32=True,
-        file_client_args=dict(
-            backend='memcached',
-            server_list_cfg=
-            '/mnt/lustre/share/memcached_client/server_list.conf',
-            client_cfg='/mnt/lustre/share/memcached_client/client.conf')),
+        to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='RandomAffine',
@@ -76,11 +76,12 @@ train_pipeline = [
 test_pipeline = [
     dict(
         type='LoadImageFromFile',
-        file_client_args=dict(
-            backend='memcached',
-            server_list_cfg=
-            '/mnt/lustre/share/memcached_client/server_list.conf',
-            client_cfg='/mnt/lustre/share/memcached_client/client.conf')),
+        ),
+        #file_client_args=dict(
+        #    backend='memcached',
+        #    server_list_cfg=
+        #    '/mnt/lustre/share/memcached_client/server_list.conf',
+        #    client_cfg='/mnt/lustre/share/memcached_client/client.conf')),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(320, 320),
@@ -98,106 +99,34 @@ test_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
+
 data = dict(
-    samples_per_gpu=96,
-    workers_per_gpu=2,
+    samples_per_gpu=32,
+    workers_per_gpu=4,
     train=dict(
-        _delete_=True,
-        type='RepeatDataset',
-        times=10,
-        dataset=dict(
-            type='CocoDataset',
-            ann_file='data/coco/annotations/instances_train2017.json',
-            img_prefix='data/coco/train2017/',
-            pipeline=[
-                dict(
-                    type='LoadImageFromFile',
-                    to_float32=True,
-                    file_client_args=dict(
-                        backend='memcached',
-                        server_list_cfg=
-                        '/mnt/lustre/share/memcached_client/server_list.conf',
-                        client_cfg=
-                        '/mnt/lustre/share/memcached_client/client.conf')),
-                dict(type='LoadAnnotations', with_bbox=True),
-                dict(
-                    type='RandomAffine',
-                    max_rotate_degree=0,
-                    max_translate_ratio=0.2,
-                    scaling_ratio_range=(0.5, 1.5),
-                    max_shear_degree=0),
-                dict(type='Resize', img_scale=(320, 320), keep_ratio=False),
-                dict(type='RandomFlip', flip_ratio=0.5),
-                dict(
-                    type='Normalize',
-                    mean=[123.675, 116.28, 103.53],
-                    std=[58.395, 57.12, 57.375],
-                    to_rgb=True),
-                dict(type='Pad', size_divisor=32),
-                dict(type='DefaultFormatBundle'),
-                dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
-            ])),
+        type=dataset_type,
+        ann_file=data_root +
+        'debug.txt',
+        img_prefix=data_root + 
+        'JPEGImages',
+        pipeline=train_pipeline),
     val=dict(
-        type='CocoDataset',
-        ann_file='data/coco/annotations/instances_val2017.json',
-        img_prefix='data/coco/val2017/',
-        pipeline=[
-            dict(
-                type='LoadImageFromFile',
-                file_client_args=dict(
-                    backend='memcached',
-                    server_list_cfg=
-                    '/mnt/lustre/share/memcached_client/server_list.conf',
-                    client_cfg='/mnt/lustre/share/memcached_client/client.conf'
-                )),
-            dict(
-                type='MultiScaleFlipAug',
-                img_scale=(320, 320),
-                flip=False,
-                transforms=[
-                    dict(type='Resize', keep_ratio=False),
-                    dict(type='RandomFlip'),
-                    dict(
-                        type='Normalize',
-                        mean=[123.675, 116.28, 103.53],
-                        std=[58.395, 57.12, 57.375],
-                        to_rgb=True),
-                    dict(type='Pad', size_divisor=32),
-                    dict(type='DefaultFormatBundle'),
-                    dict(type='Collect', keys=['img'])
-                ])
-        ]),
+        type=dataset_type,
+        ann_file=data_root +
+        'debug.txt',
+        img_prefix=data_root + 
+        'JPEGImages',
+        pipeline=test_pipeline),
     test=dict(
-        type='CocoDataset',
-        ann_file='data/coco/annotations/instances_val2017.json',
-        img_prefix='data/coco/val2017/',
-        pipeline=[
-            dict(
-                type='LoadImageFromFile',
-                file_client_args=dict(
-                    backend='memcached',
-                    server_list_cfg=
-                    '/mnt/lustre/share/memcached_client/server_list.conf',
-                    client_cfg='/mnt/lustre/share/memcached_client/client.conf'
-                )),
-            dict(
-                type='MultiScaleFlipAug',
-                img_scale=(320, 320),
-                flip=False,
-                transforms=[
-                    dict(type='Resize', keep_ratio=False),
-                    dict(type='RandomFlip'),
-                    dict(
-                        type='Normalize',
-                        mean=[123.675, 116.28, 103.53],
-                        std=[58.395, 57.12, 57.375],
-                        to_rgb=True),
-                    dict(type='Pad', size_divisor=32),
-                    dict(type='DefaultFormatBundle'),
-                    dict(type='Collect', keys=['img'])
-                ])
-        ]))
-evaluation = dict(interval=1, metric='bbox')
+        type=dataset_type,
+        ann_file=data_root +
+        'debug.txt',
+        img_prefix=data_root +
+        'JPEGImages',
+        pipeline=test_pipeline))
+evaluation = dict(interval=1, metric='mAP')
+#evaluation = dict(interval=1, metric='bbox')
+
 optimizer = dict(type='SGD', lr=0.56, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 lr_config = dict(
@@ -219,4 +148,6 @@ load_from = None
 resume_from = None
 workflow = [('train', 1)]
 work_dir = 'workdir/nanodet_0.5x/0.5x_warp'
-gpu_ids = range(0, 8)
+gpu_ids = range(1)
+seed = 0
+device = 'cuda'
