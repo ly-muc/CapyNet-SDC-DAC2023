@@ -16,11 +16,13 @@ from .resnext import ResNeXt
 from .ssd_vgg import SSDVGG
 from .swin import SwinTransformer
 from .trident_resnet import TridentResNet
+from .shufflenetv2 import ShuffleNetV2
+from .shufflenetv2_from_megii import Megii_ShuffleNetV2
 
 __all__ = [
     'RegNet', 'ResNet', 'ResNetV1d', 'ResNeXt', 'SSDVGG', 'HRNet',
     'MobileNetV2', 'Res2Net', 'HourglassNet', 'DetectoRS_ResNet',
     'DetectoRS_ResNeXt', 'Darknet', 'ResNeSt', 'TridentResNet', 'CSPDarknet',
     'SwinTransformer', 'PyramidVisionTransformer',
-    'PyramidVisionTransformerV2', 'EfficientNet'
+    'PyramidVisionTransformerV2', 'EfficientNet', 'ShuffleNetV2', 'Megii_ShuffleNetV2'
 ]
