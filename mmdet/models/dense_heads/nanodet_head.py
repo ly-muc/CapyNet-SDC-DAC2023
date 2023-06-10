@@ -397,6 +397,7 @@ class NanoDetHead(AnchorFreeHead):
             bbox_preds[0].device,
             flatten=True)
 
+        # print(f'mlvl_points: {mlvl_points}')
         mlvl_cls_scores = [cls_scores[i].detach() for i in range(num_levels)]
         mlvl_bbox_preds = [bbox_preds[i].detach() for i in range(num_levels)]
 
@@ -406,7 +407,8 @@ class NanoDetHead(AnchorFreeHead):
         scale_factors = [
             img_metas[i]['scale_factor'] for i in range(cls_scores[0].shape[0])
         ]
-
+        # print(f'img_shapes: {img_shapes}')
+        # print(f'Scale factors: {scale_factors}')
         result_list = self._get_bboxes(mlvl_cls_scores, mlvl_bbox_preds,
                                        mlvl_points, img_shapes, scale_factors,
                                        cfg, rescale)
@@ -457,8 +459,8 @@ class NanoDetHead(AnchorFreeHead):
             cfg.get('nms_pre', -1), device=device, dtype=torch.long)
         mlvl_bboxes = []
         mlvl_scores = []
-        for cls_score, bbox_pred, stride, points in zip(
-                cls_scores, bbox_preds, self.strides, mlvl_points):
+        for cls_score, bbox_pred, stride, points, img_shape in zip(
+                cls_scores, bbox_preds, self.strides, mlvl_points, img_shapes):
             assert cls_score.size()[-2:] == bbox_pred.size()[-2:]
             y, x = points
             centers = torch.stack((x, y), dim=-1)
@@ -482,7 +484,7 @@ class NanoDetHead(AnchorFreeHead):
                 bbox_pred = bbox_pred[batch_inds, topk_inds, :]
                 scores = scores[batch_inds, topk_inds, :]
 
-            bboxes = distance2bbox(centers, bbox_pred, max_shape=img_shapes)
+            bboxes = distance2bbox(centers, bbox_pred, max_shape=img_shape)
             mlvl_bboxes.append(bboxes)
             mlvl_scores.append(scores)
 
@@ -663,8 +665,12 @@ class NanoDetHead(AnchorFreeHead):
         h, w = featmap_size
         # First create Range with the default dtype, than convert to
         # target `dtype` for onnx exporting.
-        x_range = (torch.arange(w, dtype=dtype, device=device) + 0.5) * stride
-        y_range = (torch.arange(h, dtype=dtype, device=device) + 0.5) * stride
+        # Current TensorRT Version does not support Range operations
+        # for non Int types.
+        x_range = torch.arange(w, dtype=torch.int32, device=device)
+        y_range = torch.arange(h, dtype=torch.int32, device=device)
+        x_range = (x_range.type(dtype) + 0.5) * stride
+        y_range = (y_range.type(dtype) + 0.5) * stride
         y, x = torch.meshgrid(y_range, x_range)
         if flatten:
             y = y.flatten()

@@ -1,6 +1,8 @@
+
+
 # Modify dataset type and path
 dataset_type = 'DACDataset'
-data_root = '/home/linyan/data/dac/train/'
+data_root = '/home/melina/gpu_starter_2023/data/dac/train/'
 
 # use caffe img_norm
 img_norm_cfg = dict(

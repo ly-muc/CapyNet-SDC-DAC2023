@@ -44,7 +44,7 @@ model = dict(
 
 # Modify dataset type and path
 dataset_type = 'DACDataset'
-data_root = '/home/linyan/data/dac/train/'
+data_root = '/home/melina/gpu_starter_2023/data/dac/train/'
 
 val_dataloader = dict(
     persistent_workers=True,
@@ -62,7 +62,7 @@ train_pipeline = [
         max_translate_ratio=0.2,
         scaling_ratio_range=(0.5, 1.5),
         max_shear_degree=0),
-    dict(type='Resize', img_scale=(320, 320), keep_ratio=False),
+    dict(type='Resize', img_scale=(640, 352), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(
         type='Normalize',
@@ -84,7 +84,7 @@ test_pipeline = [
         #    client_cfg='/mnt/lustre/share/memcached_client/client.conf')),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(320, 320),
+        img_scale=(640, 352),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=False),
@@ -144,7 +144,7 @@ log_config = dict(
 dist_params = dict(backend='nccl', port=25968)
 find_unused_parameters = True
 log_level = 'INFO'
-load_from = None
+load_from = '/home/melina/gpu_starter_2023/nanodet.pth'
 resume_from = None
 workflow = [('train', 1)]
 work_dir = 'workdir/nanodet_0.5x/0.5x_warp'

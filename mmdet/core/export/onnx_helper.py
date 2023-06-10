@@ -59,6 +59,9 @@ def get_k_for_topk(k, size):
     Returns:
         tuple: (int or Tensor): The final K for TopK.
     """
+    if (isinstance(k, torch.Tensor) & isinstance(size, torch.Tensor)):
+        device = k.device
+        size = size.to(device)
     ret_k = -1
     if k <= 0 or size <= 0:
         return ret_k

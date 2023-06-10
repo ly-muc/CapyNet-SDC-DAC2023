@@ -7,8 +7,8 @@ import pathlib
 import cv2
 import sys
 
-DAC_CONTEST = pathlib.Path("/home/root/jupyter_notebooks/fpga_starter_2023/")
-IMG_DIR = DAC_CONTEST / "images"
+DAC_CONTEST = pathlib.Path("/home/melina/gpu_starter_2023/")
+IMG_DIR = DAC_CONTEST / "data/dac/train/JPEGImages"
 RESULT_DIR = DAC_CONTEST / "result"
 
 BATCH_SIZE = 1000
@@ -86,7 +86,7 @@ class Team:
                     + str(len(object_locations))
                     + " object locations returned."
                 )
-            self.__object_data = self.__object_data | object_locations
+            self.__object_data = {**self.__object_data, **object_locations}
 
             runtime = end - start
             # energy = (

@@ -31,7 +31,8 @@ class Integral(nn.Module):
         self.reg_max = reg_max
         self.register_buffer('project',
                              torch.linspace(0, self.reg_max, self.reg_max + 1))
-
+        #self.project = torch.arange(0, self.reg_max + 1).float()
+    
     def forward(self, x):
         """Forward feature from the regression head to get integral result of
         bounding box location.
@@ -45,7 +46,8 @@ class Integral(nn.Module):
                 offsets from the box center in four directions, shape (N, 4).
         """
         x = F.softmax(x.reshape(-1, self.reg_max + 1), dim=1)
-        x = F.linear(x, self.project.type_as(x)).reshape(-1, 4)
+        #x = F.linear(x, self.project.type_as(x)).reshape(-1, 4)
+        x = F.linear(x, torch.t(self.project)).reshape(-1, 4)
         return x
 
 
