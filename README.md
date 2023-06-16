@@ -1,3 +1,8 @@
+# Team: CapiNet (Linyan+Melina)
+
+To run inference, add the images to the "images" folder and run "CapyNet.ipynb" in the CapyNet folder.
+
+
 # DAC 2023 Design Contest
 
 For full contest details, please see the [2023 DAC System Design Contest](https://dac-sdc.github.io/2023/) page.
@@ -24,4 +29,11 @@ jupyter notebook dashboard.  Open the `sample_team/dac_sdc.ipynb` notebook for d
 
 3. result: The results contain the output xml produced when execution is complete, and contains the runtime, energy usage, and predicted location of each object in each image.
 
+## References
+Part of the code and deployment flow are based on the following repositories. We thank their authors for open-sourcing their work:
+
+* https://github.com/Senwang98/Lightweight-Detection-and-KD
+* https://github.com/RangiLyu/nanodet
+* https://github.com/daquexian/onnx-simplifier
+* https://github.com/ZhangGe6/onnx-modifier
 
