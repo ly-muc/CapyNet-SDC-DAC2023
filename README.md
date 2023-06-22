@@ -1,4 +1,4 @@
-# Team: CapiNet (Linyan+Melina)
+# Team: CapyNet (Linyan+Melina)
 
 To run inference, add the images to the "images" folder and run "CapyNet.ipynb" in the CapyNet folder.
 
