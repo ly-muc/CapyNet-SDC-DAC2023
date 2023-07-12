@@ -1,16 +1,19 @@
-# Team: CapyNet (TU Munich, ETH Zurich)
-
+# Team: CapyNet (TU Munich, ETH Zurich) <img src="images/capy.png" alt="Image" width="60" > 
 This is the submission repository of Team CapyNet to the System Design Contest of the 60th Design Automation Contest 2023.
 
 For more information on the contest please check the website of the [2023 DAC System Design Contest](https://dac-sdc.github.io/2023/).
 
-![Pipeline](images/pipeline.png)
+<div style="display: flex; justify-content: center;">
+    <img src="images/pipeline.png" alt="Image" width="600" >  
+</div>
+
 ## Task
 
 The DAC System Design Contest focuses on object detection and classification on an embedded GPU or FPGA system. Contestants will receive a training dataset provided by Baidu, and a hidden dataset will be used to evaluate the performance of the designs in terms of accuracy and speed.
 
-![Task](images/task.jpg)
-
+<div style="display: flex; justify-content: center;">
+    <img src="images/task.jpg" alt="Image" width="400" >  
+</div>
 
 ## Usage
 
